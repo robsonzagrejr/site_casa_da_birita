@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   BrowserRouter,
   Routes,
@@ -6,9 +5,7 @@ import {
 } from 'react-router-dom';
 import { StorefrontLayout } from '../shared/layout/StorefrontLayout';
 import { AdminLayout } from '../shared/layout/AdminLayout';
-import { HomePage } from '../features/catalog/pages/HomePage';
-import { ProductPage } from '../features/catalog/pages/ProductPage';
-import { CollectionPage } from '../features/catalog/pages/CollectionPage';
+import { HomePage } from '../features/pages/home/HomePage';
 
 export function AppRouter() {
   return (
@@ -16,8 +13,6 @@ export function AppRouter() {
       <Routes>
         <Route element={<StorefrontLayout />}>
           <Route path="/" element={<HomePage />} />
-          <Route path="/products/:id" element={<ProductPage />} />
-          <Route path="/collections/:slug" element={<CollectionPage />} />
         </Route>
 
         <Route path="/admin" element={<AdminLayout />}>
@@ -27,4 +22,3 @@ export function AppRouter() {
     </BrowserRouter>
   );
 }
-

@@ -4,6 +4,8 @@
   background: radial-gradient(1200px 800px at 20% -10%, rgba(255, 179, 0, 0.18), transparent 55%),
     radial-gradient(900px 700px at 90% 0%, rgba(92, 124, 250, 0.16), transparent 55%),
     var(--bg);
+  display: flex;
+  flex-direction: column;
 }
 
 .header {
@@ -67,13 +69,16 @@
   max-width: 1120px;
   margin: 0 auto;
   padding: 28px 20px 40px;
+  flex-grow: 1;
 }
 
 .footer {
-  max-width: 1120px;
+  background-color: var(--bg);
+  min-width: 1120px;
   margin: 0 auto;
-  padding: 18px 20px 34px;
+  padding: 18px 20px 10px 34px;
   color: var(--muted);
   border-top: 1px solid var(--border);
+  text-align: center;
 }
 

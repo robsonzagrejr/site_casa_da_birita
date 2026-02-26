@@ -21,9 +21,6 @@ export function StorefrontLayout() {
         </nav>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <ThemeToggle />
-          <button className={styles.cartIcon} aria-label="Carrinho">
-            🛒
-          </button>
         </div>
       </header>
 
@@ -32,7 +29,10 @@ export function StorefrontLayout() {
       </main>
 
       <footer className={styles.footer}>
-        <small>© {new Date().getFullYear()} Casa da Birita</small>
+        <small>
+          Developed with s2 by Robson Zagre Junior
+          © {new Date().getFullYear()} Casa da Birita
+        </small>
       </footer>
     </div>
   );

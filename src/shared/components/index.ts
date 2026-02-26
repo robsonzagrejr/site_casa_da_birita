@@ -1,1 +1,2 @@
-export { ThemeToggle } from './ThemeToggle';
+export { ThemeToggle } from "./ThemeToggle/ThemeToggle";
+export { PromotionalBanner } from "./PromotionalBanner/PromotionalBanner";
