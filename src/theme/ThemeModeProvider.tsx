@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
-import { darkTheme, lightTheme, injectThemeCSSVariables } from './theme';
+import { darkTheme, lightTheme } from './theme';
 
 type ThemeMode = 'light' | 'dark' | 'system';
 
@@ -84,11 +84,6 @@ export function ThemeModeProvider({ children }: Props) {
   );
 
   const theme = resolvedMode === 'dark' ? darkTheme : lightTheme;
-
-  // Inject CSS variables into document root whenever theme changes
-  useEffect(() => {
-    injectThemeCSSVariables(theme);
-  }, [theme]);
 
   const value: ThemeContextValue = {
     mode,

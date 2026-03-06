@@ -6,6 +6,7 @@ import {
 import { StorefrontLayout } from '../shared/layout/StorefrontLayout';
 import { AdminLayout } from '../shared/layout/AdminLayout';
 import { HomePage } from '../features/pages/home/HomePage';
+import { DashboardPage } from '../features/admin/pages/DashboardPage';
 
 export function AppRouter() {
   return (
@@ -16,7 +17,10 @@ export function AppRouter() {
         </Route>
 
         <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<div>Admin dashboard</div>} />
+          <Route index element={<DashboardPage />} />
+          <Route path="products" element={<div>Gerenciamento de Produtos</div>} />
+          <Route path="orders" element={<div>Gerenciamento de Vendas</div>} />
+          <Route path="stock" element={<div>Gerenciamento de Estoque</div>} />
         </Route>
       </Routes>
     </BrowserRouter>
