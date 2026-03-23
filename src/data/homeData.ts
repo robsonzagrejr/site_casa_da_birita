@@ -236,3 +236,11 @@ export const benefitsData: BenefitData[] = [
         text: 'Participe do nosso clube e ganhe brindes e descontos exclusivos.',
     },
 ];
+export const contactData = {
+    whatsapp: '+5511999999999',
+    whatsappMessage: 'Olá! Gostaria de saber mais sobre os produtos da Casa da Birita.',
+    email: 'contato@casadabirita.com.br',
+    instagram: '@casadabirita',
+    address: 'Av. Paulista, 1000 - São Paulo, SP',
+    businessHours: 'Segunda a Sábado: 10h às 22h | Domingo: 12h às 20h'
+};

@@ -16,14 +16,17 @@ import {
   ListItemButton,
   Menu,
   MenuItem,
-  Collapse
+  Collapse,
+  Grid
 } from '@mui/material';
-import { 
-  Menu as MenuIcon, 
-  Close as CloseIcon, 
+import {
+  Menu as MenuIcon,
+  Close as CloseIcon,
   KeyboardArrowDown as ArrowDownIcon,
   ExpandLess,
-  ExpandMore
+  ExpandMore,
+  WhatsApp as WhatsAppIcon,
+  Instagram as InstagramIcon
 } from '@mui/icons-material';
 import { ThemeToggle } from 'shared/components/ThemeToggle';
 import { Trolley } from 'features/trolley/Trolley';
@@ -34,6 +37,7 @@ const navLinks = [
   { label: 'Coleções', to: '/collections/todas', hasSubmenu: true },
   { label: 'Promoções', to: '/collections/promocoes' },
   { label: 'Mais vendidos', to: '/collections/mais-vendidos' },
+  { label: 'Contato', to: '/contato' },
 ];
 
 export function StorefrontLayout() {
@@ -61,6 +65,8 @@ export function StorefrontLayout() {
     handleMenuClose();
     setMobileMenuOpen(false);
   };
+
+  const whatsappUrl = `https://wa.me/${homeData.contactData.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(homeData.contactData.whatsappMessage)}`;
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: 'background.default', color: 'text.primary' }}>
@@ -116,10 +122,10 @@ export function StorefrontLayout() {
                       onClick={handleMenuOpen}
                       color="inherit"
                       underline="hover"
-                      sx={{ 
-                        fontWeight: 500, 
-                        display: 'flex', 
-                        alignItems: 'center', 
+                      sx={{
+                        fontWeight: 500,
+                        display: 'flex',
+                        alignItems: 'center',
                         gap: 0.5,
                         border: 'none',
                         background: 'none',
@@ -155,10 +161,10 @@ export function StorefrontLayout() {
                       }}
                     >
                       {homeData.collections.map((col) => (
-                        <MenuItem 
-                          key={col.slug} 
+                        <MenuItem
+                          key={col.slug}
                           onClick={() => handleCollectionClick(col.slug)}
-                          sx={{ 
+                          sx={{
                             fontWeight: 500,
                             py: 1.5,
                             '&:hover': {
@@ -252,11 +258,92 @@ export function StorefrontLayout() {
         <Outlet />
       </Container>
 
-      <Box component="footer" sx={{ py: 3, textAlign: 'center', bgcolor: 'background.paper', borderTop: 1, borderColor: 'divider' }}>
-        <Typography variant="body2" color="text.secondary">
-          Developed with s2 by Robson Zagre Junior <br />
-          © {new Date().getFullYear()} Casa da Birita
-        </Typography>
+      {/* Rich Subfooter */}
+      <Box component="footer" sx={{ bgcolor: 'background.paper', borderTop: 1, borderColor: 'divider', pt: 8, pb: 4 }}>
+        <Container maxWidth="lg">
+          <Grid container spacing={4}>
+            {/* Column 1: Brand */}
+            <Grid size={{ xs: 12, md: 4 }}>
+              <Typography variant="h6" sx={{ fontWeight: 800, color: 'primary.main', mb: 2 }}>
+                CASA DA BIRITA
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 3, maxWidth: 300, lineHeight: 1.7 }}>
+                A sua boutique de bebidas premium. Selecionamos os melhores rótulos para transformar seus momentos em celebrações inesquecíveis.
+              </Typography>
+              <Stack direction="row" spacing={2}>
+                <IconButton
+                  component={Link}
+                  href={whatsappUrl}
+                  target="_blank"
+                  size="small"
+                  sx={{ bgcolor: 'primary.transparent', color: 'primary.main' }}
+                >
+                  <ArrowDownIcon sx={{ transform: 'rotate(-45deg)', fontSize: '1.2rem' }} />
+                  <WhatsAppIcon sx={{ fontSize: '1.2rem' }} />
+                </IconButton>
+                <IconButton
+                  component={Link}
+                  href={`https://instagram.com/${homeData.contactData.instagram.replace('@', '')}`}
+                  target="_blank"
+                  size="small"
+                  sx={{ bgcolor: 'primary.transparent', color: 'primary.main' }}
+                >
+                  <InstagramIcon sx={{ fontSize: '1.2rem' }} />
+                </IconButton>
+              </Stack>
+            </Grid>
+
+            {/* Column 2: Shop */}
+            <Grid size={{ xs: 6, sm: 4, md: 2 }}>
+              <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 2 }}>
+                LOJA
+              </Typography>
+              <Stack spacing={1}>
+                {homeData.collections.slice(0, 5).map((col) => (
+                  <Link key={col.slug} component={RouterLink} to={`/collections/${col.slug}`} color="text.secondary" underline="hover" variant="body2">
+                    {col.label}
+                  </Link>
+                ))}
+              </Stack>
+            </Grid>
+
+            {/* Column 3: Help */}
+            <Grid size={{ xs: 6, sm: 4, md: 3 }}>
+              <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 2 }}>
+                AJUDA
+              </Typography>
+              <Stack spacing={1}>
+                <Link component={RouterLink} to="/faq" color="text.secondary" underline="hover" variant="body2">Dúvidas Frequentes (FAQ)</Link>
+                <Link component={RouterLink} to="/contato" color="text.secondary" underline="hover" variant="body2">Fale Conosco</Link>
+                <Link component={RouterLink} to="/termos" color="text.secondary" underline="hover" variant="body2">Termos de Uso</Link>
+                <Link component={RouterLink} to="/privacidade" color="text.secondary" underline="hover" variant="body2">Privacidade</Link>
+              </Stack>
+            </Grid>
+
+            {/* Column 4: Institutions */}
+            <Grid size={{ xs: 12, sm: 4, md: 3 }}>
+              <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 2 }}>
+                INSTITUCIONAL
+              </Typography>
+              <Stack spacing={1}>
+                <Link component={RouterLink} to="/sobre" color="text.secondary" underline="hover" variant="body2">Nossa História</Link>
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                  {homeData.contactData.address}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {homeData.contactData.email}
+                </Typography>
+              </Stack>
+            </Grid>
+          </Grid>
+
+          <Box sx={{ mt: 8, pt: 4, borderTop: 1, borderColor: 'divider', textAlign: 'center' }}>
+            <Typography variant="body2" color="text.secondary">
+              Developed with s2 by Robson Zagre Junior <br />
+              © {new Date().getFullYear()} Casa da Birita. Todos os direitos reservados.
+            </Typography>
+          </Box>
+        </Container>
       </Box>
     </Box>
   );

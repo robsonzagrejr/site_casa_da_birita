@@ -5,6 +5,8 @@ interface ButtonProps extends Omit<MuiButtonProps, 'color' | 'size'> {
   size?: 'small' | 'medium' | 'large';
   color?: 'primary' | 'secondary' | 'inherit' | 'success' | 'error' | 'info' | 'warning';
   to?: string;
+  href?: string;
+  target?: string;
   component?: React.ElementType;
 }
 
