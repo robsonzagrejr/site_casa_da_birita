@@ -5,20 +5,33 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const apiService = {
     // Fetch products with optional filters
-    getProducts: async (params?: { category?: string; bestSellers?: boolean }) => {
+    getProducts: async (params?: { category?: string; bestSellers?: boolean; collection?: string }) => {
         await delay(800);
 
         let filteredProducts = [...homeData.products];
 
+        if (params?.collection) {
+            const slug = params.collection;
+
+            if (slug === 'todas') {
+                // Return all products
+            } else if (slug === 'mais-vendidos') {
+                filteredProducts = filteredProducts.filter(p => p.bestSeller);
+            } else if (slug === 'promocoes') {
+                filteredProducts = filteredProducts.filter(p => p.onSale);
+            } else {
+                filteredProducts = filteredProducts.filter(p => p.collection === slug);
+            }
+
+            return filteredProducts;
+        }
+
         if (params?.bestSellers) {
-            // Simulate best sellers by taking first 4
-            filteredProducts = filteredProducts.slice(0, 4);
+            filteredProducts = filteredProducts.filter(p => p.bestSeller);
         }
 
         if (params?.category) {
-            // In a real API, this would be a server-side filter
-            // For now, we simulate it
-            console.log(`Filtering by category: ${params.category}`);
+            filteredProducts = filteredProducts.filter(p => p.collection === params.category);
         }
 
         return filteredProducts;

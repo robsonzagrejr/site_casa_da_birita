@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Outlet, Link as RouterLink } from 'react-router-dom';
+import { Outlet, Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
   AppBar,
   Toolbar,
@@ -13,24 +13,53 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListItemButton
+  ListItemButton,
+  Menu,
+  MenuItem,
+  Collapse
 } from '@mui/material';
-import { Menu as MenuIcon, Close as CloseIcon } from '@mui/icons-material';
+import { 
+  Menu as MenuIcon, 
+  Close as CloseIcon, 
+  KeyboardArrowDown as ArrowDownIcon,
+  ExpandLess,
+  ExpandMore
+} from '@mui/icons-material';
 import { ThemeToggle } from 'shared/components/ThemeToggle';
 import { Trolley } from 'features/trolley/Trolley';
+import * as homeData from 'data/homeData';
 
 const navLinks = [
   { label: 'Início', to: '/' },
-  { label: 'Coleções', to: '/collections/todas' },
+  { label: 'Coleções', to: '/collections/todas', hasSubmenu: true },
   { label: 'Promoções', to: '/collections/promocoes' },
   { label: 'Mais vendidos', to: '/collections/mais-vendidos' },
 ];
 
 export function StorefrontLayout() {
+  const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileCollectionsOpen, setMobileCollectionsOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const isMenuOpen = Boolean(anchorEl);
 
   const toggleMobileMenu = (open: boolean) => () => {
     setMobileMenuOpen(open);
+    if (!open) setMobileCollectionsOpen(false);
+  };
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleCollectionClick = (slug: string) => {
+    navigate(`/collections/${slug}`);
+    handleMenuClose();
+    setMobileMenuOpen(false);
   };
 
   return (
@@ -80,16 +109,81 @@ export function StorefrontLayout() {
           <Stack direction="row" spacing={{ xs: 1, sm: 3 }} alignItems="center">
             <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 3 }}>
               {navLinks.slice(1).map((link) => (
-                <Link
-                  key={link.to}
-                  component={RouterLink}
-                  to={link.to}
-                  color="inherit"
-                  underline="hover"
-                  sx={{ fontWeight: 500 }}
-                >
-                  {link.label}
-                </Link>
+                link.hasSubmenu ? (
+                  <Box key={link.label}>
+                    <Link
+                      component="button"
+                      onClick={handleMenuOpen}
+                      color="inherit"
+                      underline="hover"
+                      sx={{ 
+                        fontWeight: 500, 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: 0.5,
+                        border: 'none',
+                        background: 'none',
+                        cursor: 'pointer',
+                        p: 0,
+                        fontSize: 'inherit',
+                        fontFamily: 'inherit'
+                      }}
+                    >
+                      {link.label}
+                      <ArrowDownIcon sx={{ fontSize: '1.2rem' }} />
+                    </Link>
+                    <Menu
+                      anchorEl={anchorEl}
+                      open={isMenuOpen}
+                      onClose={handleMenuClose}
+                      elevation={2}
+                      anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                      }}
+                      transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                      }}
+                      sx={{
+                        '& .MuiPaper-root': {
+                          borderRadius: 2,
+                          minWidth: 180,
+                          mt: 1.5,
+                          boxShadow: '0px 10px 15px -3px rgba(0,0,0,0.1), 0px 4px 6px -2px rgba(0,0,0,0.05)',
+                        }
+                      }}
+                    >
+                      {homeData.collections.map((col) => (
+                        <MenuItem 
+                          key={col.slug} 
+                          onClick={() => handleCollectionClick(col.slug)}
+                          sx={{ 
+                            fontWeight: 500,
+                            py: 1.5,
+                            '&:hover': {
+                              color: 'primary.main',
+                              bgcolor: 'primary.transparent',
+                            }
+                          }}
+                        >
+                          {col.label}
+                        </MenuItem>
+                      ))}
+                    </Menu>
+                  </Box>
+                ) : (
+                  <Link
+                    key={link.to}
+                    component={RouterLink}
+                    to={link.to}
+                    color="inherit"
+                    underline="hover"
+                    sx={{ fontWeight: 500 }}
+                  >
+                    {link.label}
+                  </Link>
+                )
               ))}
             </Box>
             <Trolley />
@@ -115,15 +209,41 @@ export function StorefrontLayout() {
         </Box>
         <List>
           {navLinks.map((link) => (
-            <ListItem key={link.to} disablePadding>
-              <ListItemButton
-                component={RouterLink}
-                to={link.to}
-                onClick={toggleMobileMenu(false)}
-              >
-                <ListItemText primary={link.label} primaryTypographyProps={{ fontWeight: 600 }} />
-              </ListItemButton>
-            </ListItem>
+            <React.Fragment key={link.label}>
+              {link.hasSubmenu ? (
+                <>
+                  <ListItem disablePadding>
+                    <ListItemButton onClick={() => setMobileCollectionsOpen(!mobileCollectionsOpen)}>
+                      <ListItemText primary={link.label} primaryTypographyProps={{ fontWeight: 600 }} />
+                      {mobileCollectionsOpen ? <ExpandLess /> : <ExpandMore />}
+                    </ListItemButton>
+                  </ListItem>
+                  <Collapse in={mobileCollectionsOpen} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                      {homeData.collections.map((col) => (
+                        <ListItemButton
+                          key={col.slug}
+                          sx={{ pl: 4 }}
+                          onClick={() => handleCollectionClick(col.slug)}
+                        >
+                          <ListItemText primary={col.label} primaryTypographyProps={{ fontSize: '0.9rem', fontWeight: 500 }} />
+                        </ListItemButton>
+                      ))}
+                    </List>
+                  </Collapse>
+                </>
+              ) : (
+                <ListItem disablePadding>
+                  <ListItemButton
+                    component={RouterLink}
+                    to={link.to}
+                    onClick={toggleMobileMenu(false)}
+                  >
+                    <ListItemText primary={link.label} primaryTypographyProps={{ fontWeight: 600 }} />
+                  </ListItemButton>
+                </ListItem>
+              )}
+            </React.Fragment>
           ))}
         </List>
       </Drawer>

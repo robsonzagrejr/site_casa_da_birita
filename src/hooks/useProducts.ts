@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { apiService } from '../services/api';
 import { ProductData } from '../data/homeData';
 
-export function useProducts(params?: { category?: string; bestSellers?: boolean }) {
+export function useProducts(params?: { category?: string; bestSellers?: boolean; collection?: string }) {
     const [products, setProducts] = useState<ProductData[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
@@ -22,9 +22,7 @@ export function useProducts(params?: { category?: string; bestSellers?: boolean 
         };
 
         fetchProducts();
-        // We stringify params to use as dependency if needed, 
-        // but usually in home page we just fetch once on mount or when section changes.
-    }, [params?.category, params?.bestSellers]);
+    }, [params?.category, params?.bestSellers, params?.collection]);
 
     return { products, loading, error };
 }

@@ -6,6 +6,7 @@ import {
 import { StorefrontLayout } from '../shared/layout/StorefrontLayout';
 import { AdminLayout } from '../shared/layout/AdminLayout';
 import { HomePage } from '../features/pages/home/HomePage';
+import { CollectionPage } from '../features/pages/collection/CollectionPage';
 import { DashboardPage } from '../features/admin/pages/DashboardPage';
 
 export function AppRouter() {
@@ -14,6 +15,7 @@ export function AppRouter() {
       <Routes>
         <Route element={<StorefrontLayout />}>
           <Route path="/" element={<HomePage />} />
+          <Route path="/collections/:slug" element={<CollectionPage />} />
         </Route>
 
         <Route path="/admin" element={<AdminLayout />}>
